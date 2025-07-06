@@ -1,9 +1,27 @@
 const board = document.getElementById('game-board');
 
-// 絵文字ペア（同じ絵柄が2枚ずつ）
-const cards = ['🍎', '🍌', '🍇', '🍊', '🍎', '🍌', '🍇', '🍊'];
+const firstButton = document.getElementById('first-button');
+const secondButton = document.getElementById('second-button');
+
+let cards = [];  //カードに使うカードセット（最初は空）
 let flippedCards = [];  //今めくっているカード２枚保持
 let lock = false;       //めくり中の操作制限
+
+// シャッフル関数
+function shuffle(array){
+  for(let i = array.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random()*(i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function startGame(levelData){
+  board.innerHTML = "";
+  cards = [...levelData,...levelData];
+  shuffle(cards);
+
+  flippedCards = [];
+  lock = false;
 
 
 // カードを1枚ずつ作る
@@ -14,11 +32,7 @@ cards.forEach((emoji, index) => {
   card.dataset.emoji = emoji;
   card.dataset.index = index;
 
-  /*//カードをクリックしたとき
-  card.addEventListener('click', () => {
-    card.textContent = emoji; // めくる
-  });
-  */
+
 
   card.addEventListener('click', () => {
     if (lock) return;          //処理ロック中は無視
@@ -46,3 +60,8 @@ cards.forEach((emoji, index) => {
 
   board.appendChild(card);
 });
+}
+
+// ボタンにイベントを設定
+firstButton.addEventListener("click", () => startGame(level1card));
+secondButton.addEventListener("click", () => startGame(level2card));
